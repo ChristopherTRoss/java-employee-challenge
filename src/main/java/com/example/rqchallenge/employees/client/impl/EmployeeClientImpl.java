@@ -35,7 +35,8 @@ public class EmployeeClientImpl implements IEmployeeClient {
                     clientUrl + "/employees",
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<>() {}
+                    new ParameterizedTypeReference<>() {
+                    }
             );
             return response.getBody().getData();
         } catch (HttpClientErrorException e) {

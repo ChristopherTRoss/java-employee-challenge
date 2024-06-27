@@ -15,11 +15,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -152,7 +158,8 @@ class RqChallengeApplicationTests {
         );
         mockResponse.setData(mockEmployees);
         ResponseEntity<GetEmployeeListResponse> responseEntity = new ResponseEntity<>(mockResponse, HttpStatus.OK);
-        doReturn(responseEntity).when(restTemplate).exchange("http://localhost:8080/employees", HttpMethod.GET, null, new ParameterizedTypeReference<GetEmployeeListResponse>() {});
+        doReturn(responseEntity).when(restTemplate).exchange("http://localhost:8080/employees", HttpMethod.GET, null, new ParameterizedTypeReference<GetEmployeeListResponse>() {
+        });
 
         List<Employee> employees = employeeClient.getAllEmployees();
 
@@ -164,7 +171,8 @@ class RqChallengeApplicationTests {
         EmployeeResponse mockResponse = new EmployeeResponse();
         mockResponse.setData(new Employee(1, "John Doe", 5000, 20, ""));
         ResponseEntity<EmployeeResponse> responseEntity = new ResponseEntity<>(mockResponse, HttpStatus.OK);
-        doReturn(responseEntity).when(restTemplate).exchange("http://localhost:8080/employee/1", HttpMethod.GET, null, new ParameterizedTypeReference<EmployeeResponse>() {});
+        doReturn(responseEntity).when(restTemplate).exchange("http://localhost:8080/employee/1", HttpMethod.GET, null, new ParameterizedTypeReference<EmployeeResponse>() {
+        });
 
         Employee employee = employeeClient.getEmployeeById("1");
 
@@ -215,7 +223,8 @@ class RqChallengeApplicationTests {
 
     @Test
     void getEmployeeById_HttpClientErrorException() {
-        when(restTemplate.exchange("http://localhost:8080/employee/1", HttpMethod.GET, null, new ParameterizedTypeReference<EmployeeResponse>(){}))
+        when(restTemplate.exchange("http://localhost:8080/employee/1", HttpMethod.GET, null, new ParameterizedTypeReference<EmployeeResponse>() {
+        }))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND, "Employee not found"));
 
         assertThrows(HttpClientErrorException.class, () -> employeeClient.getEmployeeById("1"));
