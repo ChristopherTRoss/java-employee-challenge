@@ -84,6 +84,19 @@ class RqChallengeApplicationTests {
     }
 
     @Test
+    void testGetEmployeesByNameSearchPartial() {
+        List<Employee> mockEmployees = Arrays.asList(
+                new Employee(1, "Gabe Doe", 5000, 20, ""),
+                new Employee(2, "Gale Smith", 6000, 21, "")
+        );
+        when(employeeClientMock.getAllEmployees()).thenReturn(mockEmployees);
+
+        List<Employee> result = employeeService.getEmployeesByNameSearch("Ga");
+
+        assertThat(result).hasSize(2);
+    }
+
+    @Test
     void testGetEmployeeById() {
         Employee mockEmployee = new Employee(1, "John Doe", 5000, 40, "");
         when(employeeClientMock.getEmployeeById("1")).thenReturn(mockEmployee);
@@ -121,12 +134,12 @@ class RqChallengeApplicationTests {
         assertThat(result).hasSize(3);
         assertThat(result.get(0)).isEqualTo("Jane Smith");
         assertThat(result.get(1)).isEqualTo("Michael Johnson");
-        assertThat(result.get(2)).isEqualTo("John Doe"); // Order by descending salary
+        assertThat(result.get(2)).isEqualTo("John Doe");
     }
 
     @Test
     void testCreateEmployee() {
-        String mockResponse = "Employee created successfully";
+        String mockResponse = "success";
         Map<String, Object> employeeInput = new HashMap<>();
         employeeInput.put("name", "John Doe");
         employeeInput.put("salary", 5000);
@@ -186,7 +199,7 @@ class RqChallengeApplicationTests {
         employeeInput.put("salary", 50000);
 
         CreateEmployeeResponse mockResponse = new CreateEmployeeResponse();
-        mockResponse.setStatus("Created");
+        mockResponse.setStatus("success");
 
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(employeeInput);
 
@@ -196,7 +209,7 @@ class RqChallengeApplicationTests {
 
         String status = employeeClient.createEmployee(employeeInput);
 
-        assertThat(status).isEqualTo("Created");
+        assertThat(status).isEqualTo("success");
     }
 
     @Test
